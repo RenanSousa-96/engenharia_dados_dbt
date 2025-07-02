@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: mysql_raw
+    database: postgres  
+    schema: transactional  
+    tables:
+      - name: accounts
+      - name: customers

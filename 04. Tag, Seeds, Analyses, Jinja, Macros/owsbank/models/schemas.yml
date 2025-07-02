@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: stg_accounts
+    tags: ['painel_contas']
+    description: modelo contendo os dados limpos da tabela accounts
+    columns:
+      - name: account_id
+        description: chave primária da tabela 
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: chave estrangeira para a tabela de customers
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: status  
+        description: tipo de status aceito para clientes
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive']
+  - name: stg_customers
+    tags: ['painel_contas']
+    description: modelo contendo os dados limpos da tabela customers
+
+
+exposures:
+  - name: painel_contas
+    tags: ['painel_contas', 'daily']
+    label: Teste de Exposures
+    type: dashboard
+    maturity: high
+    url: https://bi.tool/dashboards/1
+    description: '{{ doc("descricao") }}'
+
+    depends_on:
+      - ref('stg_accounts')
+      - ref('stg_customers')
+      - source('mysql_raw', 'customers')
+
+    owner:
+      name: Renan
+      email: renan.ap.sousa96@gmail.com
+
+
+sources:
+  - name: mysql_raw
+    database: postgres  
+    schema: transactional
+
+    tables:
+      - name: accounts
+        tags: ['painel_contas', 'hourly']
+      - name: customers
+        tags: ['painel_contas', 'hourly']
