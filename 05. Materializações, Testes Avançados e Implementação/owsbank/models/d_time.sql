@@ -1,19 +1,5 @@
 {{ config(materialized='table', tags = ['dim'])}}
 
-with cleaned_d_time as (
-    select
-        time_id,
-        {% if target.type == 'postgres' %}
-            action_timestamp:: timestamp
-        {% elif target.type == 'bigquery' -%}
-            timestamp(action_timestamp)
-        {%- else -%}
-            action_timestamp
-        {%- endif -%}
-        as action_timestamp
-    from {{ source('postgres', 'd_time') }}
-)
-
 SELECT
     time_id,
     action_timestamp,
@@ -31,5 +17,5 @@ SELECT
     date_part('day', action_timestamp) as action_day
     */
     -#}
-FROM cleaned_d_time
+FROM {{ ref('cleaned_d_time') }}
 {{ limit_lines_dev() }}
