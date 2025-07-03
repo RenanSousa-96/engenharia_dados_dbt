@@ -32,3 +32,4 @@ SELECT
     */
     -#}
 FROM cleaned_d_time
+{{ limit_lines_dev() }}
