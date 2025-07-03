@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='ephemeral'
+    )
+}}
+
 select
     time_id,
     {% if target.type == 'postgres' %}
