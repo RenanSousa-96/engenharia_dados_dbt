@@ -1,6 +1,12 @@
+--{{
+--    config(
+--        materialized='ephemeral'
+--    )
+--}}
+
 {{
     config(
-        materialized='ephemeral'
+        materialized='incremental'
     )
 }}
 
@@ -15,3 +21,8 @@ select
     {%- endif -%}
     as action_timestamp
 from {{ source('postgres', 'd_time') }}
+
+
+{% if is_incremental() %}
+where event_time >= (select coalesce(max(event_time),'1900-01-01') from {{ this }} )
+{% endif %}
