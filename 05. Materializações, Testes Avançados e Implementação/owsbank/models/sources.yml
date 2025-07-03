@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: postgres
+    database: dbtspecialization-464702
+    schema: transactional
+    tables: 
+      - name: d_time
+      - name: accounts
+      - name: customers
